@@ -1,13 +1,5 @@
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-
-type Todo = {
-  id: number;
-  content: string;
-};
-
-type TodoList = {
-  todos: Todo[];
-};
+import { GetTodoListQuery } from "./gql/graphql";
 
 const getTodoList = gql`
   query getTodoList {
@@ -95,13 +87,14 @@ function App() {
       <h1>Hello World</h1>
       <button
         type="button"
-        onClick={() =>
-          getTodo({
+        onClick={async () => {
+          const todo = await getTodo({
             variables: {
               id: 3,
             },
-          })
-        }
+          });
+          console.log(todo);
+        }}
       >
         Get Todo
       </button>
@@ -120,7 +113,7 @@ function App() {
 }
 
 function List() {
-  const { data, error, loading } = useQuery<TodoList>(getTodoList);
+  const { data, error, loading } = useQuery<GetTodoListQuery>(getTodoList);
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
   return (
