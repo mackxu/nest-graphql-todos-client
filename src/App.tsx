@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 
 type Todo = {
   id: number;
@@ -12,6 +12,15 @@ type TodoList = {
 const getTodoList = gql`
   query getTodoList {
     todos {
+      id
+      content
+    }
+  }
+`;
+
+const getTodoItem = gql`
+  query getTodo($id: Int!) {
+    todoById(id: $id) {
       id
       content
     }
@@ -44,6 +53,8 @@ const removeTodoItem = gql`
 `;
 
 function App() {
+  const [getTodo, todoRes] = useLazyQuery(getTodoItem);
+  console.log(todoRes, "todoRes");
   const [addTodo] = useMutation(createTodo);
   // console.log(res, 'addTodo');
   const [updateTodo, res] = useMutation(updateTodoItem);
@@ -82,6 +93,18 @@ function App() {
   return (
     <div>
       <h1>Hello World</h1>
+      <button
+        type="button"
+        onClick={() =>
+          getTodo({
+            variables: {
+              id: 3,
+            },
+          })
+        }
+      >
+        Get Todo
+      </button>
       <button type="button" onClick={addTodoHandler}>
         Add Todo
       </button>

@@ -9,6 +9,7 @@ npm install @apollo/client graphql
 - ApolloProvider
 - gql
 - useQuery
+- useLazyQuery
 - useMutation
 
 ## 参考
